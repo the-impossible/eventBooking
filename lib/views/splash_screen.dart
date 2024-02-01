@@ -11,7 +11,7 @@ class Splash extends StatelessWidget {
     return SafeArea(
       child: AnimatedSplashScreen(
         splash: Image.asset(
-          "assets/logo.png",
+          "assets/event.png",
           width: 300,
           height: 200,
         ),
