@@ -1,7 +1,10 @@
 import 'package:event/components/delegatedForm.dart';
 import 'package:event/components/delegatedText.dart';
+import 'package:event/controllers/loginController.dart';
 import 'package:event/utils/constant.dart';
+import 'package:event/utils/form_validators.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SignIn extends StatefulWidget {
   final Function onClicked;
@@ -16,6 +19,7 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  LoginController loginController = Get.put(LoginController());
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -50,7 +54,8 @@ class _SignInState extends State<SignIn> {
                     fieldName: 'Email',
                     icon: Icons.mail,
                     hintText: 'Enter email address',
-                    // formController: loginController.regNoController,
+                    validator: FormValidator.validateEmail,
+                    formController: loginController.emailController,
                     isSecured: false,
                   ),
                   DelegatedForm(
@@ -58,7 +63,7 @@ class _SignInState extends State<SignIn> {
                     fieldName: 'Password',
                     icon: Icons.password,
                     hintText: 'Enter password',
-                    // formController: loginController.regNoController,
+                    formController: loginController.passwordController,
                     isSecured: true,
                   ),
                   Padding(
@@ -67,7 +72,7 @@ class _SignInState extends State<SignIn> {
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () => loginController.signIn(),
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Constants.secondaryColor,
                             shape: RoundedRectangleBorder(

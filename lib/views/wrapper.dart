@@ -1,6 +1,7 @@
 import 'package:event/components/delegatedText.dart';
 import 'package:event/models/user_data.dart';
 import 'package:event/services/database.dart';
+import 'package:event/utils/constant.dart';
 import 'package:event/utils/loading.dart';
 import 'package:event/views/auth/authenticate.dart';
 import 'package:event/views/auth/sign_in.dart';
@@ -21,7 +22,7 @@ class _WrapperState extends State<Wrapper> {
 
   @override
   Widget build(BuildContext context) {
-    // FirebaseAuth.instance.signOut();
+    FirebaseAuth.instance.signOut();
 
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
@@ -52,10 +53,14 @@ class _WrapperState extends State<Wrapper> {
               } else {
                 if (userData.data!.type == 'user') {
                   // route to user page
-                  return Container();
+                  return Container(
+                    color: Constants.tertiaryColor,
+                  );
                 }
                 // route to admin page
-                return Container();
+                return Container(
+                  color: Constants.primaryColor,
+                );
               }
             },
           );

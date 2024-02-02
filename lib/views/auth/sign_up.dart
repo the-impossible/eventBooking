@@ -1,6 +1,7 @@
 import 'package:event/components/delegatedForm.dart';
 import 'package:event/components/delegatedText.dart';
 import 'package:event/utils/constant.dart';
+import 'package:event/utils/form_validators.dart';
 import 'package:flutter/material.dart';
 
 class SignUp extends StatefulWidget {
@@ -60,6 +61,7 @@ class _SignUpState extends State<SignUp> {
                     fieldName: 'Username',
                     icon: Icons.person,
                     hintText: 'Enter username',
+                    validator: FormValidator.validateUsername,
                     // formController: loginController.regNoController,
                     isSecured: false,
                   ),
@@ -68,6 +70,7 @@ class _SignUpState extends State<SignUp> {
                     fieldName: 'Email',
                     icon: Icons.mail,
                     hintText: 'Enter email address',
+                    validator: FormValidator.validateEmail,
                     // formController: loginController.regNoController,
                     isSecured: false,
                   ),
@@ -76,6 +79,7 @@ class _SignUpState extends State<SignUp> {
                     fieldName: 'Password',
                     icon: Icons.password,
                     hintText: 'Enter password',
+                    validator: FormValidator.validatePassword,
                     // formController: loginController.regNoController,
                     isSecured: true,
                   ),
@@ -84,6 +88,7 @@ class _SignUpState extends State<SignUp> {
                     fieldName: 'Mobile Number',
                     icon: Icons.phone,
                     hintText: 'Enter mobile number',
+                    validator: FormValidator.validatePhone,
                     // formController: loginController.regNoController,
                     isSecured: false,
                   ),

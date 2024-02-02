@@ -52,7 +52,7 @@ class _DelegatedFormState extends State<DelegatedForm> {
         Padding(
           padding: const EdgeInsets.only(top: 12, bottom: 12),
           child: TextFormField(
-            obscureText: widget.isSecured ? !passToggle : widget.isSecured,
+            obscureText: widget.isSecured ? passToggle : widget.isSecured,
             validator: widget.validator,
             controller: widget.formController,
             style: const TextStyle(
