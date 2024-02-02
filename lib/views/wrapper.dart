@@ -1,11 +1,10 @@
 import 'package:event/components/delegatedText.dart';
 import 'package:event/models/user_data.dart';
 import 'package:event/services/database.dart';
-import 'package:event/utils/constant.dart';
 import 'package:event/utils/loading.dart';
 import 'package:event/views/auth/authenticate.dart';
-import 'package:event/views/auth/sign_in.dart';
-import 'package:event/views/auth/sign_up.dart';
+import 'package:event/views/home/admin/admin_home.dart';
+import 'package:event/views/home/users/user_home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -22,7 +21,7 @@ class _WrapperState extends State<Wrapper> {
 
   @override
   Widget build(BuildContext context) {
-    FirebaseAuth.instance.signOut();
+    // FirebaseAuth.instance.signOut();
 
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
@@ -53,14 +52,10 @@ class _WrapperState extends State<Wrapper> {
               } else {
                 if (userData.data!.type == 'user') {
                   // route to user page
-                  return Container(
-                    color: Constants.tertiaryColor,
-                  );
+                  return const UserHome();
                 }
                 // route to admin page
-                return Container(
-                  color: Constants.primaryColor,
-                );
+                return const AdminHome();
               }
             },
           );
