@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event/models/user_data.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class DatabaseService extends GetxController {
@@ -10,6 +12,7 @@ class DatabaseService extends GetxController {
 
   // collection reference
   var usersCollection = FirebaseFirestore.instance.collection("Users");
+  var filesCollection = FirebaseStorage.instance.ref();
 
   // Determine userType
   Future<UserData?> getUser() async {
@@ -22,4 +25,27 @@ class DatabaseService extends GetxController {
     }
     return null;
   }
+
+  //Create user
+  Future createStudentData(String username, String phone, String type) async {
+    await setImage(uid, 'Users');
+    return await usersCollection.doc(uid).set(
+      {
+        'username': username,
+        'phone': phone,
+        'type': type,
+        'name': " ",
+        'created': FieldValue.serverTimestamp(),
+      },
+    );
+  }
+
+  Future<bool> setImage(String? uid, String path) async {
+    final ByteData byteData = await rootBundle.load("assets/user.png");
+    final Uint8List imageData = byteData.buffer.asUint8List();
+    filesCollection.child("$path/$uid").putData(imageData);
+    return true;
+  }
+
+
 }
