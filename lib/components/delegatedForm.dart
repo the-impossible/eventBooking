@@ -2,6 +2,7 @@ import 'package:event/components/delegatedText.dart';
 import 'package:flutter/material.dart';
 import '../utils/constant.dart';
 
+// ignore: must_be_immutable
 class DelegatedForm extends StatefulWidget {
   final String fieldName;
   final IconData icon;
