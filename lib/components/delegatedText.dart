@@ -23,7 +23,7 @@ class DelegatedText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      (truncate == true) ? truncateString(text, 13) : text,
+      (truncate == true) ? truncateString(text, 40) : text,
       softWrap: true,
       style: TextStyle(
         color: color,

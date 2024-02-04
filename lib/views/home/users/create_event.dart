@@ -90,7 +90,7 @@ class _CreateEventState extends State<CreateEvent> {
           backgroundColor: Constants.basicColor,
           leading: IconButton(
             color: Constants.tertiaryColor,
-            onPressed: () {},
+            onPressed: () => Get.back(),
             icon: const Icon(
               Icons.arrow_back,
               size: 30,
