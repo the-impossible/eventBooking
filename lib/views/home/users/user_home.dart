@@ -1,7 +1,7 @@
 import 'package:event/utils/constant.dart';
 import 'package:event/views/home/admin/all_events.dart';
 import 'package:event/views/home/users/create_event.dart';
-import 'package:event/views/home/admin/profile.dart';
+import 'package:event/views/home/profile.dart';
 import 'package:event/views/home/users/my_events.dart';
 import 'package:fancy_bottom_navigation_2/fancy_bottom_navigation.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +17,7 @@ class _UserHomeState extends State<UserHome> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   GlobalKey bottomNavigationKey = GlobalKey();
-  int currentPage = 1;
+  int currentPage = 2;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class _UserHomeState extends State<UserHome> {
             TabData(iconData: Icons.create_new_folder, title: "My Events"),
             TabData(iconData: Icons.person, title: "Profile")
           ],
-          initialSelection: 1,
+          initialSelection: 2,
           key: bottomNavigationKey,
           onTabChangedListener: (position) {
             setState(() {

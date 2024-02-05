@@ -6,6 +6,13 @@ class FormValidator {
     return null;
   }
 
+  static String? validateName(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Valid Full name is Required!';
+    }
+    return null;
+  }
+
   static String? validateField(String? value) {
     if (value == null || value.isEmpty) {
       return 'This Field is Required!';
@@ -37,7 +44,7 @@ class FormValidator {
   static String? validatePhone(String? value) {
     bool phoneValid = RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)').hasMatch(value!);
     if (value.isEmpty) {
-      return 'Phone is Required!';
+      return 'Phone number is Required!';
     } else if (!phoneValid) {
       return 'Valid Phone number is Required!';
     }

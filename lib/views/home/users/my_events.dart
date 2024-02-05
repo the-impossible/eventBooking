@@ -39,14 +39,6 @@ class _MyEventsState extends State<MyEvents> {
             color: Constants.tertiaryColor,
           ),
           backgroundColor: Constants.basicColor,
-          leading: IconButton(
-            color: Constants.tertiaryColor,
-            onPressed: () {},
-            icon: const Icon(
-              Icons.arrow_back,
-              size: 30,
-            ),
-          ),
         ),
         body: SingleChildScrollView(
           child: SizedBox(
@@ -71,91 +63,100 @@ class _MyEventsState extends State<MyEvents> {
                           ),
                           child: Column(
                             children: [
-                              Container(
-                                height: size.height * 0.28,
-                                width: size.width,
-                                decoration: BoxDecoration(
-                                  color: Constants.basicColor,
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: Color.fromARGB(221, 207, 203, 203),
-                                      blurRadius: 2,
-                                      spreadRadius: 2,
-                                      offset: Offset(0, 1),
-                                    ),
-                                  ],
+                              InkWell(
+                                onTap: () => Get.toNamed(
+                                  Routes.eventDetails,
                                 ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0, vertical: 8),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: Image.asset(
-                                          "assets/baner.png",
-                                          height: size.height * 0.15,
-                                          width: size.width,
-                                          fit: BoxFit.cover,
+                                child: Container(
+                                  height: size.height * 0.28,
+                                  width: size.width,
+                                  decoration: BoxDecoration(
+                                    color: Constants.basicColor,
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color:
+                                            Color.fromARGB(221, 207, 203, 203),
+                                        blurRadius: 2,
+                                        spreadRadius: 2,
+                                        offset: Offset(0, 1),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8.0, vertical: 8),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: Image.asset(
+                                            "assets/baner.png",
+                                            height: size.height * 0.15,
+                                            width: size.width,
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          DelegatedText(
-                                            text: "Henry's Marriage",
-                                            fontSize: 20,
-                                            fontName: 'InterBold',
-                                            color: Constants.primaryColor,
-                                          ),
-                                          DelegatedText(
-                                            text:
-                                                "Am inviting you to my forth-coming wedding",
-                                            fontSize: 15,
-                                            fontName: 'InterMed',
-                                            color: Constants.tertiaryColor,
-                                            truncate: true,
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 10.0),
-                                            child: Row(
-                                              children: [
-                                                DelegatedText(
-                                                  text: "Status: ",
-                                                  fontSize: 15,
-                                                  fontName: 'InterBold',
-                                                  color:
-                                                      Constants.tertiaryColor,
-                                                ),
-                                                const SizedBox(width: 10),
-                                                DelegatedText(
-                                                  text: "Pending",
-                                                  fontSize: 15,
-                                                  fontName: 'InterBold',
-                                                  color:
-                                                      Constants.tertiaryColor,
-                                                ),
-                                                const Spacer(),
-                                                const Icon(
-                                                  Icons
-                                                      .arrow_forward_ios_rounded,
-                                                  color: Constants.primaryColor,
-                                                ),
-                                              ],
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            DelegatedText(
+                                              text: "Henry's Marriage",
+                                              fontSize: 20,
+                                              fontName: 'InterBold',
+                                              color: Constants.primaryColor,
                                             ),
-                                          )
-                                        ],
-                                      ),
-                                    )
-                                  ],
+                                            DelegatedText(
+                                              text:
+                                                  "Am inviting you to my forth-coming wedding",
+                                              fontSize: 15,
+                                              fontName: 'InterMed',
+                                              color: Constants.tertiaryColor,
+                                              truncate: true,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 10.0),
+                                              child: Row(
+                                                children: [
+                                                  DelegatedText(
+                                                    text: "Status: ",
+                                                    fontSize: 15,
+                                                    fontName: 'InterBold',
+                                                    color:
+                                                        Constants.tertiaryColor,
+                                                  ),
+                                                  const SizedBox(width: 10),
+                                                  DelegatedText(
+                                                    text: "Pending",
+                                                    fontSize: 15,
+                                                    fontName: 'InterBold',
+                                                    color:
+                                                        Constants.tertiaryColor,
+                                                  ),
+                                                  const Spacer(),
+                                                  const Icon(
+                                                    Icons
+                                                        .arrow_forward_ios_rounded,
+                                                    color:
+                                                        Constants.primaryColor,
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],

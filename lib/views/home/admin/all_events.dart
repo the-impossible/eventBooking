@@ -109,6 +109,7 @@ class _AllEventsState extends State<AllEvents> {
                                             fontSize: 20,
                                             fontName: 'InterBold',
                                             color: Constants.primaryColor,
+                                            truncate: true,
                                           ),
                                           DelegatedText(
                                             text:
@@ -116,6 +117,7 @@ class _AllEventsState extends State<AllEvents> {
                                             fontSize: 15,
                                             fontName: 'InterMed',
                                             color: Constants.tertiaryColor,
+                                            truncate: true,
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.only(

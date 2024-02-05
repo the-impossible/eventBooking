@@ -1,7 +1,7 @@
 import 'package:event/utils/constant.dart';
 import 'package:event/views/home/admin/all_events.dart';
 import 'package:event/views/home/users/create_event.dart';
-import 'package:event/views/home/admin/profile.dart';
+import 'package:event/views/home/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:fancy_bottom_navigation_2/fancy_bottom_navigation.dart';
 
