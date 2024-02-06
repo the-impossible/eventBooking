@@ -1,5 +1,6 @@
 import 'package:event/utils/constant.dart';
 import 'package:event/views/home/admin/all_events.dart';
+import 'package:event/views/home/admin/event_review.dart';
 import 'package:event/views/home/users/create_event.dart';
 import 'package:event/views/home/profile.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,7 @@ class _AdminHomeState extends State<AdminHome> {
           index: currentPage,
           children: const [
             AllEvents(),
-            CreateEvent(),
+            EventReview(),
             Profile(),
           ],
         ),
@@ -38,7 +39,7 @@ class _AdminHomeState extends State<AdminHome> {
           textColor: Constants.primaryColor,
           tabs: [
             TabData(iconData: Icons.dashboard, title: "Events"),
-            TabData(iconData: Icons.create_new_folder, title: "Create"),
+            TabData(iconData: Icons.star, title: "Event Review"),
             TabData(iconData: Icons.person, title: "Profile")
           ],
           initialSelection: 0,

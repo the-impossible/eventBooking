@@ -110,7 +110,7 @@ class _EventDetailState extends State<EventDetail> {
             Padding(
               padding: const EdgeInsets.only(right: 10.0),
               child: IconButton(
-                onPressed: () => {},
+                onPressed: () => Get.toNamed(Routes.contactList),
                 icon: const Icon(
                   Icons.person_add_alt,
                   size: 30,

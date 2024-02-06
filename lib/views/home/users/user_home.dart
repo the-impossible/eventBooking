@@ -17,7 +17,7 @@ class _UserHomeState extends State<UserHome> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   GlobalKey bottomNavigationKey = GlobalKey();
-  int currentPage = 2;
+  int currentPage = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class _UserHomeState extends State<UserHome> {
             TabData(iconData: Icons.create_new_folder, title: "My Events"),
             TabData(iconData: Icons.person, title: "Profile")
           ],
-          initialSelection: 2,
+          initialSelection: 0,
           key: bottomNavigationKey,
           onTabChangedListener: (position) {
             setState(() {

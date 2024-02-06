@@ -1,7 +1,9 @@
 import 'package:event/views/home/profile.dart';
 import 'package:event/views/home/rest_password.dart';
+import 'package:event/views/home/users/contact_list.dart';
 import 'package:event/views/home/users/create_event.dart';
 import 'package:event/views/home/users/event_detail.dart';
+import 'package:event/views/home/admin/event_review.dart';
 import 'package:event/views/home/users/people_attending.dart';
 import 'package:event/views/splash_screen.dart';
 import 'package:event/views/wrapper.dart';
@@ -16,6 +18,8 @@ class Routes {
   static String peopleAttending = '/peopleAttending';
   static String profile = '/profile';
   static String resetPassword = '/resetPassword';
+  static String eventReview = '/eventReview';
+  static String contactList = '/contactList';
 }
 
 final getPages = [
@@ -46,5 +50,13 @@ final getPages = [
   GetPage(
     name: Routes.resetPassword,
     page: () => const ResetPassword(),
+  ),
+  GetPage(
+    name: Routes.eventReview,
+    page: () => const EventReview(),
+  ),
+  GetPage(
+    name: Routes.contactList,
+    page: () => const ContactList(),
   ),
 ];

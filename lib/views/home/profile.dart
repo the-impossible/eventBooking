@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:event/components/delegatedForm.dart';
 import 'package:event/components/delegatedSnackBar.dart';
 import 'package:event/components/delegatedText.dart';
+import 'package:event/controllers/logoutController.dart';
 import 'package:event/routes/routes.dart';
 import 'package:event/utils/constant.dart';
 import 'package:event/utils/form_validators.dart';
@@ -20,6 +21,7 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   final _formKey = GlobalKey<FormState>();
+  LogoutController logoutController = Get.put(LogoutController());
 
   File? image;
 
@@ -53,14 +55,6 @@ class _ProfileState extends State<Profile> {
             color: Constants.tertiaryColor,
           ),
           backgroundColor: Constants.primaryColor,
-          leading: IconButton(
-            color: Constants.tertiaryColor,
-            onPressed: () => Get.back(),
-            icon: const Icon(
-              Icons.arrow_back,
-              size: 30,
-            ),
-          ),
         ),
         backgroundColor: Constants.basicColor,
         body: SingleChildScrollView(
@@ -183,7 +177,7 @@ class _ProfileState extends State<Profile> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 18.0, top: 10),
+                        padding: const EdgeInsets.only(bottom: 10, top: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -202,6 +196,41 @@ class _ProfileState extends State<Profile> {
                               ),
                             ),
                           ],
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () => {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('Confirm Logout'),
+                                content: const Text(
+                                    'Are you sure you want to logout? '),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      logoutController.signOut();
+                                    },
+                                    child: const Text('Log out'),
+                                  ),
+                                ],
+                              );
+                            },
+                          )
+                        },
+                        child: DelegatedText(
+                          text: "Logout ",
+                          fontSize: 20,
+                          fontName: "InterBold",
+                          color: Constants.primaryColor,
                         ),
                       ),
                     ],

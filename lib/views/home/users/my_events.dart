@@ -12,6 +12,7 @@ class MyEvents extends StatefulWidget {
 }
 
 class _MyEventsState extends State<MyEvents> {
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
