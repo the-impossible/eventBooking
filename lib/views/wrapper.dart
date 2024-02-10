@@ -35,7 +35,7 @@ class _WrapperState extends State<Wrapper> {
         } else if (snapshot.hasData) {
           //check for userType (userType == user)? userPage : adminPage
           final userID = FirebaseAuth.instance.currentUser!.uid;
-          databaseService.uid = userID;
+          databaseService.userId = userID;
 
           return FutureBuilder(
             future: databaseService.getUser(),

@@ -1,5 +1,6 @@
 import 'package:contacts_service/contacts_service.dart';
 import 'package:event/components/delegatedText.dart';
+import 'package:event/controllers/invitePeopleController.dart';
 import 'package:event/utils/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -27,7 +28,8 @@ class _ContactListState extends State<ContactList> {
     if (await Permission.contacts.isGranted) {
       getAllContacts();
     } else {
-      Permission.contacts.request();
+      await Permission.contacts.request();
+      getAllContacts();
     }
   }
 
@@ -43,6 +45,9 @@ class _ContactListState extends State<ContactList> {
     });
     navigator!.pop(Get.context!);
   }
+
+  InvitePeopleController invitePeopleController =
+      Get.put(InvitePeopleController());
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +163,10 @@ class _ContactListState extends State<ContactList> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            invitePeopleController.selectedContacts = selectedContacts;
+            invitePeopleController.inviteContact();
+          },
           backgroundColor: Constants.primaryColor,
           child: const Icon(
             Icons.mail,

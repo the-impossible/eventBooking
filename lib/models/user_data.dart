@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class UserData {
   final String id;
   final String name;
+  final String token;
   final String username;
   final String phone;
   final String type;
@@ -11,6 +12,7 @@ class UserData {
   UserData({
     required this.id,
     required this.name,
+    required this.token,
     required this.username,
     required this.phone,
     required this.type,
@@ -21,6 +23,7 @@ class UserData {
     return UserData(
       id: snapshot.id,
       name: snapshot['name'],
+      token: snapshot['token'],
       username: snapshot['username'],
       phone: snapshot['phone'],
       type: snapshot['type'],

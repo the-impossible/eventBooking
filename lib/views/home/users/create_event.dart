@@ -1,9 +1,8 @@
 import 'dart:io';
-
-import 'package:event/components/delegatedForm.dart';
 import 'package:event/components/delegatedForm2.dart';
 import 'package:event/components/delegatedSnackBar.dart';
 import 'package:event/components/delegatedText.dart';
+import 'package:event/controllers/createEventController.dart';
 import 'package:event/utils/constant.dart';
 import 'package:event/utils/form_validators.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +21,9 @@ class CreateEvent extends StatefulWidget {
 class _CreateEventState extends State<CreateEvent> {
   final _formKey = GlobalKey<FormState>();
 
+  CreateEventController createEventController =
+      Get.put(CreateEventController());
+
   bool isSwitched = false;
   String textValue = 'Unrestricted Event';
   TextEditingController _start = TextEditingController();
@@ -39,11 +41,14 @@ class _CreateEventState extends State<CreateEvent> {
 
     dateTime = DateTime(pickedDate.year, pickedDate.month, pickedDate.day,
         pickedTime.hour, pickedTime.minute);
+        
 
     setState(() {
       var date = DateFormat.yMEd().format(dateTime);
       var time = DateFormat.jm().format(dateTime);
-      controller.text = "$date, $time";
+      String eventDate = "$date, $time";
+      controller.text = eventDate;
+      createEventController.eventDate = eventDate;
     });
   }
 
@@ -51,6 +56,7 @@ class _CreateEventState extends State<CreateEvent> {
 
   Future pickImage() async {
     try {
+
       final pickedFile =
           await ImagePicker().pickImage(source: ImageSource.gallery);
 
@@ -58,11 +64,14 @@ class _CreateEventState extends State<CreateEvent> {
 
       setState(() {
         image = File(pickedFile.path);
-        // profileController.image = image;
+        createEventController.image = image;
+        createEventController.imageName = pickedFile.name;
       });
+
     } on PlatformException catch (e) {
       ScaffoldMessenger.of(Get.context!).showSnackBar(
-          delegatedSnackBar("Failed to Capture image: $e", false));
+        delegatedSnackBar("Failed to Capture image: $e", false),
+      );
     }
   }
 
@@ -71,11 +80,13 @@ class _CreateEventState extends State<CreateEvent> {
       setState(() {
         isSwitched = true;
         textValue = 'Restricted Event';
+        createEventController.isRestricted = true;
       });
     } else {
       setState(() {
         isSwitched = false;
         textValue = 'Unrestricted Event';
+        createEventController.isRestricted = false;
       });
     }
   }
@@ -141,16 +152,14 @@ class _CreateEventState extends State<CreateEvent> {
                       validator: FormValidator.validateField,
                       keyboardInputType: TextInputType.multiline,
                       maxLines: 1,
-                      // formController:
-                      //     createAccountController.usernameController,
+                      formController: createEventController.titleController,
                     ),
                     DelegatedForm2(
                       hintText: 'Event Description',
                       validator: FormValidator.validateField,
                       keyboardInputType: TextInputType.multiline,
                       maxLines: 4,
-                      // formController:
-                      //     createAccountController.usernameController,
+                      formController: createEventController.descController,
                     ),
                     Row(
                       children: [
@@ -191,7 +200,16 @@ class _CreateEventState extends State<CreateEvent> {
                         height: 50,
                         child: ElevatedButton(
                           onPressed: () {
-                            if (_formKey.currentState!.validate()) {}
+                            if (_formKey.currentState!.validate()) {
+                              if (image != null) {
+                                createEventController.createEvent();
+                              } else {
+                                ScaffoldMessenger.of(Get.context!).showSnackBar(
+                                  delegatedSnackBar(
+                                      "Upload Event Banner!", false),
+                                );
+                              }
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Constants.primaryColor,
