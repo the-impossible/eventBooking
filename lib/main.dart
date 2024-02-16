@@ -13,9 +13,9 @@ Future<dynamic> myBackgroundMessageHandler(RemoteMessage message) async {
   try {
     if (message.data.isNotEmpty) {
       print("NOT EMPTY");
-      
+
       eventDetailController.eventID = message.data['event_id'];
-      eventDetailController.getEvent();
+      eventDetailController.getEvent("details");
     } else {
       print("EMPTY");
     }

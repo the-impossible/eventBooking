@@ -1,17 +1,18 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:event/components/delegatedSnackBar.dart';
 import 'package:event/models/event_details.dart';
 import 'package:event/models/events.dart';
+import 'package:event/models/people_attending.dart';
 import 'package:event/models/user_data.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:event/services/notification_api.dart';
-import 'package:event/views/home/users/event_detail.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseService extends GetxController {
   String? userId;
@@ -24,6 +25,7 @@ class DatabaseService extends GetxController {
   var eventCollection = FirebaseFirestore.instance.collection("Events");
   var invitationCollection =
       FirebaseFirestore.instance.collection("Invitation");
+  var rsvpCollection = FirebaseFirestore.instance.collection("Rsvp");
   var filesCollection = FirebaseStorage.instance.ref();
 
   // Determine userType
@@ -74,7 +76,7 @@ class DatabaseService extends GetxController {
   Future<bool> createEvent(
     String title,
     String desc,
-    FieldValue date,
+    Timestamp date,
     String uid,
     String userID,
     File? image,
@@ -168,19 +170,31 @@ class DatabaseService extends GetxController {
         await sendPushNotification(existingDeviceToken, eventID);
 
     // send SMS for non-existing users
-    sendSMS();
+    bool smsSuccessful = await sendSMS(nonExistingPhones);
     // save invitation details to DB
     for (var phone in nonExistingPhones) {
       await invitationCollection.doc().set(
         {
-          'eventID': eventCollection.doc(eventID),
+          'eventID': "Events/$eventID",
           'phone': phone,
           'created': FieldValue.serverTimestamp(),
         },
       );
     }
 
-    return null;
+    if (smsSuccessful && notificationSuccessful) {
+      return true;
+    } else {
+      if (smsSuccessful) {
+        ScaffoldMessenger.of(Get.context!)
+            .showSnackBar(delegatedSnackBar("SMS successfully sent!", true));
+      }
+      if (notificationSuccessful) {
+        ScaffoldMessenger.of(Get.context!)
+            .showSnackBar(delegatedSnackBar("PUSH notification sent!", true));
+      }
+    }
+    return false;
   }
 
   Future<bool> sendPushNotification(existingDeviceToken, eventID) async {
@@ -224,39 +238,38 @@ class DatabaseService extends GetxController {
     }
   }
 
-  void sendSMS() async {
-    // Define the request headers and payload
-    // Map<String, String> headers = {
-    //   'Authorization': 'App e7b8341cadd8181e1b025bab07069d31-d6febbf8-35d5-4276-90e8-ae5ae39b64ae',
-    //   'Content-Type': 'application/json',
-    //   'Accept': 'application/json',
-    // };
+  Future<bool> sendSMS(nonExistingPhones) async {
+    var headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    };
 
-    // Map<String, dynamic> payload = {
-    //   'messages': [
-    //     {
-    //       'destinations': [{'to': '2348146543239'}],
-    //       'from': 'ServiceSMS',
-    //       'text': 'Hello,\n\nThis is a test message from Infobip. Have a nice day!'
-    //     }
-    //   ]
-    // };
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('https://www.bulksmsnigeria.com/api/v2/sms'));
 
-    // // Convert the payload to JSON
-    // String payloadJson = jsonEncode(payload);
+    request.fields.addAll({
+      'from': 'Eventify',
+      'to': '${nonExistingPhones.join(", ")}',
+      'body':
+          'You have received an event request, to accept kindly download our app "Eventify.pro" and sign up with this number',
+      'api_token':
+          'Pro7K2OnSaHGHc2tbwryMHJrUmfnivLyGKILbPjGcwRlWHVFXoIQ7pWQcKDq',
+      'gateway': 'direct-refund'
+    });
 
-    // // Send the HTTP POST request
-    // var response = await http.post(
-    //   Uri.parse('https://rg4x1p.api.infobip.com/sms/2/text/advanced'),
-    //   headers: headers,
-    //   body: payloadJson,
-    // );
+    request.headers.addAll(headers);
 
-    // // Print the response status code and body
-    // print('Response status: ${response.statusCode}');
-    // print('Response body: ${response.body}');
+    http.StreamedResponse response = await request.send();
 
-    print("SMS has been sent!");
+    if (response.statusCode == 200) {
+      print(await response.stream.bytesToString());
+      print("SMS has been sent!");
+
+      return true;
+    } else {
+      print(response.reasonPhrase);
+      return false;
+    }
   }
 
   // Get all users events either via invitation or unrestricted events
@@ -272,7 +285,7 @@ class DatabaseService extends GetxController {
 
         if (doc['isRestricted']) {
           var invitationSnapshot = await invitationCollection
-              .where('eventID', isEqualTo: doc.reference.id)
+              .where('eventID', isEqualTo: "Events/${doc.reference.id}")
               .where('phone', isEqualTo: user['phone'])
               .get();
 
@@ -295,5 +308,209 @@ class DatabaseService extends GetxController {
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Events.fromJson(doc)).toList());
+  }
+
+  // user to respond to event
+  Future<bool> respondToEvent(respond, userId, eventId) async {
+    String userRef = "Users/$userId";
+    String eventRef = "Events/$eventId";
+
+    await rsvpCollection.doc().set(
+      {
+        'eventId': eventRef,
+        'userId': userRef,
+        'respond': respond,
+        'created': FieldValue.serverTimestamp(),
+      },
+    );
+    return true;
+  }
+
+  // check if user has responded or not
+  Stream<bool> hasResponded(String userId, String eventId) {
+    String userRef = "Users/$userId";
+    String eventRef = "Events/$eventId";
+
+    final Stream<bool> stream = rsvpCollection
+        .where('eventId', isEqualTo: eventRef)
+        .where('userId', isEqualTo: userRef)
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.docs.isNotEmpty) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    return stream;
+  }
+
+  // Get a user profile
+  Stream<UserData?> getUserProfile(String uid) {
+    return usersCollection.doc(uid).snapshots().map((snapshot) {
+      if (snapshot.exists) {
+        return UserData.fromJson(snapshot);
+      }
+      return null;
+    });
+  }
+
+  // Update user profile
+  Future<bool> updateProfile(
+    String uid,
+    String name,
+    String username,
+    String phone,
+  ) async {
+    usersCollection.doc(uid).update({
+      "username": username,
+      "phone": phone,
+      "name": name,
+    });
+    return true;
+  }
+
+  // update user profile image
+  Future<bool> updateImage(File? image, String path) async {
+    filesCollection.child(path).putFile(image!);
+    return true;
+  }
+
+  // Get profile image
+  Stream<String?> getProfileImage(String path) {
+    try {
+      Future.delayed(const Duration(milliseconds: 3600));
+      return filesCollection.child(path).getDownloadURL().asStream();
+    } catch (e) {
+      return Stream.value(null);
+    }
+  }
+
+  // Admin approve user event
+  Future<bool> approveEvent(
+    String eventId,
+  ) async {
+    await eventCollection.doc(eventId).update({
+      "status": true,
+    });
+    return true;
+  }
+
+  // Check if admin has approved user event
+  Stream<bool> hasApproved(eventId) {
+    String eventRef = "Events/$eventId";
+
+    final Stream<bool> stream = eventCollection
+        .where('eventId', isEqualTo: eventRef)
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.docs.isNotEmpty) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    return stream;
+  }
+
+  // Get the list of an event attendees
+  Stream<List<PeopleAttendingModel>> getListOfAttendees(eventId) {
+    String eventRef = "Events/$eventId";
+    return rsvpCollection
+        .where('eventId', isEqualTo: eventRef)
+        .where('respond', isEqualTo: true)
+        .orderBy('created', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => PeopleAttendingModel.fromJson(doc))
+            .toList());
+  }
+
+  Future<UserData?> getUserDetails(userId) async {
+    // Query database to get user type
+    final snapshot = await usersCollection.doc(userId).get();
+    // Return user type as string
+    if (snapshot.exists) {
+      return UserData.fromJson(snapshot);
+    }
+    return null;
+  }
+
+  // Delete Event
+  Future<bool> deleteEvent(String eventId) async {
+    try {
+      final DocumentReference documentRef = eventCollection.doc(eventId);
+      final DocumentSnapshot snapshot = await documentRef.get();
+
+      if (snapshot.exists) {
+        await documentRef.delete();
+        return true;
+      } else {
+        return false; // Document with specified ID does not exist
+      }
+    } catch (e) {
+      print("Error deleting event: $e");
+      return false;
+    }
+  }
+
+  // Update user profile
+  Future<bool> updateEvent(
+    String title,
+    String desc,
+    Timestamp date,
+    String uid,
+    File? image,
+    String? imageName,
+    bool isRestricted,
+  ) async {
+    // Update document
+    try {
+      // Create a map to hold the fields to update
+      Map<String, dynamic> dataToUpdate = {
+        'title': title,
+        'desc': desc,
+        'date': date,
+        'isRestricted': isRestricted,
+      };
+
+      // Check if image and imageName are not null
+      String imageRef = '';
+      if (image != null && imageName != null) {
+        imageRef = 'Events/$uid$imageName';
+        dataToUpdate['image'] = imageRef;
+
+        // Upload the image
+        bool isUploaded = await uploadImage(image, '$uid$imageName', 'Events');
+
+        if (isUploaded) {
+          await eventCollection.doc(uid).update(dataToUpdate);
+          return true;
+        } else {
+          // If image upload fails, return false
+          return false;
+        }
+      } else {
+        await eventCollection.doc(uid).update(dataToUpdate);
+
+        return true;
+      }
+    } catch (e) {
+      // Handle any errors
+      print('Error updating event: $e');
+      return false;
+    }
+  }
+
+  Future<UserData?> getUserName(String userId) async {
+    // Query database to get user type
+    final snapshot = await usersCollection
+        .doc(userId.toString().replaceAll("Users/", ""))
+        .get();
+    // Return user type as string
+    if (snapshot.exists) {
+      return UserData.fromJson(snapshot);
+    }
+    return null;
   }
 }//end of class

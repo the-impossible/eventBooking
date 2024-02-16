@@ -28,7 +28,7 @@ class HelperNotification {
       try {
         if (details.payload != null && details.payload!.isNotEmpty) {
           eventDetailController.eventID = details.payload.toString();
-          eventDetailController.getEvent();
+          eventDetailController.getEvent("details");
         } else {}
       } catch (e) {}
       return;

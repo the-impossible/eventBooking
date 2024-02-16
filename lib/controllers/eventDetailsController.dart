@@ -1,9 +1,5 @@
-import 'dart:io';
 import 'package:event/models/event_details.dart';
 import 'package:event/routes/routes.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intl/intl.dart';
-import 'package:uuid/uuid.dart';
 import 'package:event/components/delegatedSnackBar.dart';
 import 'package:event/services/database.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +12,7 @@ class EventDetailController extends GetxController {
   String? eventID;
   EventDetails? eventDetails;
 
-  Future getEvent() async {
+  Future getEvent(String route) async {
     showDialog(
       context: Get.context!,
       barrierDismissible: false,
@@ -28,7 +24,8 @@ class EventDetailController extends GetxController {
 
     if (eventDetails != null) {
       navigator!.pop(Get.context!);
-      Get.toNamed(Routes.eventDetails);
+      if (route == 'details') Get.toNamed(Routes.eventDetails);
+        if (route == 'update') Get.toNamed(Routes.updateEvent);
     } else {
       navigator!.pop(Get.context!);
       ScaffoldMessenger.of(Get.context!)
@@ -36,3 +33,4 @@ class EventDetailController extends GetxController {
     }
   }
 }
+

@@ -103,7 +103,7 @@ class _MyEventsState extends State<MyEvents> {
                                           onTap: () => {
                                             eventDetailController.eventID =
                                                 eventData.id,
-                                            eventDetailController.getEvent()
+                                            eventDetailController.getEvent("details")
                                           },
                                           child: Container(
                                             height: size.height * 0.28,

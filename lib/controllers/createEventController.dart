@@ -29,19 +29,22 @@ class CreateEventController extends GetxController {
     String uid = const Uuid().v4(); // Generate a UUID
 
     // Function to parse date string and convert to server timestamp
-    FieldValue convertToServerTimestamp(String dateString) {
+    Timestamp convertToServerTimestamp(String dateString) {
       // Define date format
-      final dateFormat = DateFormat('E, M/d/y, h:mm a');
+      DateTime dateTime;
+      try {
+        final dateFormat = DateFormat('E, M/d/y, h:mm a');
 
-      // Parse the date string into a DateTime object
-      DateTime dateTime = dateFormat.parse(dateString);
-
+        dateTime = dateFormat.parse(dateString);
+      } catch (e) {
+        final dateFormat = DateFormat('MMM-dd-yy hh:mm a');
+        dateTime = dateFormat.parse(dateString);
+      }
       // Convert DateTime object to Firestore server timestamp
-      return FieldValue.serverTimestamp();
+      return Timestamp.fromDate(dateTime);
     }
 
-    FieldValue serverTimestamp = convertToServerTimestamp(eventDate!);
-
+    Timestamp serverTimestamp = convertToServerTimestamp(eventDate!);
     // Create a new event
     bool isSuccessful = await DatabaseService().createEvent(
       titleController.text,

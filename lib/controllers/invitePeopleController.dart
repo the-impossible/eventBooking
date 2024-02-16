@@ -32,24 +32,21 @@ class InvitePeopleController extends GetxController {
     cleanPhoneNumbers(selectedContacts);
 
     // Make DatabaseService API call
-    await DatabaseService().createInvitation(selectedContacts, eventID!);
+    bool invitationSent =
+        await DatabaseService().createInvitation(selectedContacts, eventID!);
 
     // check if invitation has been sent
-
-    // Invitation Sent
-    ScaffoldMessenger.of(Get.context!)
-        .showSnackBar(delegatedSnackBar("Invitation successfully sent!", true));
-
-    // Remove show dialogue
-    navigator!.pop(Get.context!);
-
-    // if (eventDetails != null) {
-    //   navigator!.pop(Get.context!);
-    //   Get.toNamed(Routes.eventDetails);
-    // } else {
-    //   navigator!.pop(Get.context!);
-    //   ScaffoldMessenger.of(Get.context!)
-    //       .showSnackBar(delegatedSnackBar("Something went wrong!", false));
-    // }
+    if (invitationSent) {
+      // Remove show dialogue
+      navigator!.pop(Get.context!);
+      ScaffoldMessenger.of(Get.context!).showSnackBar(
+          delegatedSnackBar("Invitation successfully sent!", true));
+    } else {
+      // Remove show dialogue
+      navigator!.pop(Get.context!);
+      ScaffoldMessenger.of(Get.context!)
+          .showSnackBar(delegatedSnackBar("Something went wrong!", false));
+    }
+    Get.back();
   }
 }

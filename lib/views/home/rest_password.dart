@@ -1,6 +1,7 @@
 import 'package:event/components/delegatedForm.dart';
-import 'package:event/components/delegatedForm2.dart';
+import 'package:event/components/delegatedSnackBar.dart';
 import 'package:event/components/delegatedText.dart';
+import 'package:event/controllers/resetPasswordController.dart';
 import 'package:event/utils/constant.dart';
 import 'package:event/utils/form_validators.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,8 @@ class ResetPassword extends StatefulWidget {
 
 class _ResetPasswordState extends State<ResetPassword> {
   final _formKey = GlobalKey<FormState>();
+  ResetPasswordController resetPasswordController =
+      Get.put(ResetPasswordController());
 
   @override
   Widget build(BuildContext context) {
@@ -89,37 +92,54 @@ class _ResetPasswordState extends State<ResetPassword> {
                                 children: [
                                   const SizedBox(height: 10),
                                   DelegatedForm(
-                                    isVisible: false,
-                                    fieldName: 'Current Password',
-                                    icon: Icons.phone,
-                                    hintText: 'Enter current password',
-                                    validator: FormValidator.validateField,
-                                    isSecured: false,
-                                  ),
+                                      isVisible: false,
+                                      fieldName: 'Current Password',
+                                      icon: Icons.phone,
+                                      hintText: 'Enter current password',
+                                      validator: FormValidator.validateField,
+                                      isSecured: false,
+                                      formController:
+                                          resetPasswordController.oldPass),
                                   DelegatedForm(
-                                    isVisible: false,
-                                    fieldName: 'New Password',
-                                    icon: Icons.phone,
-                                    hintText: 'Enter New Password',
-                                    validator: FormValidator.validatePassword,
-                                    isSecured: false,
-                                  ),
+                                      isVisible: false,
+                                      fieldName: 'New Password',
+                                      icon: Icons.phone,
+                                      hintText: 'Enter New Password',
+                                      validator: FormValidator.validatePassword,
+                                      isSecured: false,
+                                      formController:
+                                          resetPasswordController.newPass),
                                   DelegatedForm(
-                                    isVisible: false,
-                                    fieldName: 'Confirm New Password',
-                                    icon: Icons.phone,
-                                    hintText: 'Confirm New Password',
-                                    validator: FormValidator.validatePassword,
-                                    isSecured: false,
-                                  ),
+                                      isVisible: false,
+                                      fieldName: 'Confirm New Password',
+                                      icon: Icons.phone,
+                                      hintText: 'Confirm New Password',
+                                      validator: FormValidator.validatePassword,
+                                      isSecured: false,
+                                      formController:
+                                          resetPasswordController.newPass2),
                                   const SizedBox(height: 15),
                                   SizedBox(
                                     width: double.infinity,
                                     height: 50,
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        if (_formKey.currentState!
-                                            .validate()) {}
+                                        if (_formKey.currentState!.validate()) {
+                                          if (resetPasswordController
+                                                  .newPass.text ==
+                                              resetPasswordController
+                                                  .newPass2.text) {
+                                            resetPasswordController
+                                                .updatePassword();
+                                          } else {
+                                            ScaffoldMessenger.of(Get.context!)
+                                                .showSnackBar(
+                                              delegatedSnackBar(
+                                                  "FAILED: New and Confirm password don't match",
+                                                  false),
+                                            );
+                                          }
+                                        }
                                       },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Constants.primaryColor,

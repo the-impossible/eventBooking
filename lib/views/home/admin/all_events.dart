@@ -73,8 +73,6 @@ class _AllEventsState extends State<AllEvents> {
                                 FirebaseAuth.instance.currentUser!.uid),
                         builder: (context, snapshot) {
                           if (snapshot.hasError) {
-                            print(
-                                "SNAPSHOT ERROR: ${snapshot.error.toString()}");
                             return Center(
                               child: Column(
                                 children: [
@@ -114,7 +112,8 @@ class _AllEventsState extends State<AllEvents> {
                                           onTap: () => {
                                             eventDetailController.eventID =
                                                 eventData.id,
-                                            eventDetailController.getEvent()
+                                            eventDetailController
+                                                .getEvent("details")
                                           },
                                           child: Container(
                                             height: size.height * 0.28,
@@ -284,6 +283,7 @@ class _AllEventsState extends State<AllEvents> {
                             }
                           } else {
                             return const Center(
+                                heightFactor: 15,
                                 child: CircularProgressIndicator());
                           }
                         }),
