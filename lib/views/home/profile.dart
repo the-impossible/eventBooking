@@ -257,7 +257,7 @@ class _ProfileState extends State<Profile> {
                               ),
                               Padding(
                                 padding:
-                                    const EdgeInsets.only(bottom: 10, top: 10),
+                                    const EdgeInsets.only(bottom: 10, top: 5),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -278,6 +278,32 @@ class _ProfileState extends State<Profile> {
                                   ],
                                 ),
                               ),
+                              (databaseService.userData!.type == "adm")
+                                  ? Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 10),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          DelegatedText(
+                                            text: "Admin Account?",
+                                            fontSize: 15,
+                                            color: Constants.tertiaryColor,
+                                          ),
+                                          TextButton(
+                                            onPressed: () =>
+                                                Get.toNamed(Routes.createAdmin),
+                                            child: DelegatedText(
+                                              text: "Create Now",
+                                              fontSize: 15,
+                                              color: Constants.primaryColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : const SizedBox(),
                               TextButton(
                                 onPressed: () => {
                                   showDialog(

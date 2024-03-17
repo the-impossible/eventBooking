@@ -56,6 +56,22 @@ class DatabaseService extends GetxController {
     );
   }
 
+  //Create admin
+  Future createAdminData(
+      String username, String phone, String type, String name) async {
+    await setImage(userId, 'Users');
+    return await usersCollection.doc(userId).set(
+      {
+        'username': username,
+        'phone': phone,
+        'type': type,
+        'name': name,
+        'token': "",
+        'created': FieldValue.serverTimestamp(),
+      },
+    );
+  }
+
   Future<bool> setImage(String? uid, String path) async {
     final ByteData byteData = await rootBundle.load("assets/user.png");
     final Uint8List imageData = byteData.buffer.asUint8List();

@@ -38,7 +38,7 @@ class _SignInState extends State<SignIn> {
                     width: 150,
                   ),
                   DelegatedText(
-                    text: 'Welcome back!',
+                    text: 'Welcome back, to Eventify.pro, where managing event is made easy!',
                     fontSize: 20,
                     fontName: 'InterBold',
                   ),

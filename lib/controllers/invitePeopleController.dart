@@ -31,22 +31,28 @@ class InvitePeopleController extends GetxController {
     // Clean the phone numbers
     cleanPhoneNumbers(selectedContacts);
 
-    // Make DatabaseService API call
-    bool invitationSent =
-        await DatabaseService().createInvitation(selectedContacts, eventID!);
+    if (selectedContacts.isNotEmpty) {
+      // Make DatabaseService API call
+      bool invitationSent =
+          await DatabaseService().createInvitation(selectedContacts, eventID!);
 
-    // check if invitation has been sent
-    if (invitationSent) {
-      // Remove show dialogue
-      navigator!.pop(Get.context!);
-      ScaffoldMessenger.of(Get.context!).showSnackBar(
-          delegatedSnackBar("Invitation successfully sent!", true));
+      // check if invitation has been sent
+      if (invitationSent) {
+        // Remove show dialogue
+        navigator!.pop(Get.context!);
+        ScaffoldMessenger.of(Get.context!).showSnackBar(
+            delegatedSnackBar("Invitation successfully sent!", true));
+      } else {
+        // Remove show dialogue
+        navigator!.pop(Get.context!);
+        ScaffoldMessenger.of(Get.context!)
+            .showSnackBar(delegatedSnackBar("Something went wrong!", false));
+      }
+      Get.back();
     } else {
-      // Remove show dialogue
       navigator!.pop(Get.context!);
       ScaffoldMessenger.of(Get.context!)
-          .showSnackBar(delegatedSnackBar("Something went wrong!", false));
+          .showSnackBar(delegatedSnackBar("No contact was selected!", false));
     }
-    Get.back();
   }
 }

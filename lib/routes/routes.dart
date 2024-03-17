@@ -1,3 +1,4 @@
+import 'package:event/views/home/admin/createAdmin.dart';
 import 'package:event/views/home/profile.dart';
 import 'package:event/views/home/rest_password.dart';
 import 'package:event/views/home/users/contact_list.dart';
@@ -22,6 +23,8 @@ class Routes {
   static String eventReview = '/eventReview';
   static String contactList = '/contactList';
   static String updateEvent = '/updateEvent';
+  static String createAdmin = '/createAdmin';
+
 }
 
 final getPages = [
@@ -64,5 +67,9 @@ final getPages = [
   GetPage(
     name: Routes.updateEvent,
     page: () => const UpdateEvent(),
+  ),
+    GetPage(
+    name: Routes.createAdmin,
+    page: () => const CreateAdmin(),
   ),
 ];
