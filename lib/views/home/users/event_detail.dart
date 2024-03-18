@@ -241,7 +241,7 @@ class _EventDetailState extends State<EventDetail> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
             child: SizedBox(
-              height: size.height,
+              height: size.height * .8,
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -680,7 +680,8 @@ class _EventDetailState extends State<EventDetail> {
                               return Visibility(
                                 visible: (snapshot.data == true) ? false : true,
                                 child: Padding(
-                                  padding: const EdgeInsets.only(top: 30.0),
+                                  padding: const EdgeInsets.only(
+                                      top: 30.0, bottom: 30),
                                   child: SizedBox(
                                     width: double.infinity,
                                     height: 50,
